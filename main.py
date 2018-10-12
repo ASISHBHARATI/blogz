@@ -60,7 +60,7 @@ def new_blog():
         new_post = Blog(title,body)
         db.session.add(new_post)
         db.session.commit()
-        #post_id = Blog.query.get(new_post.id)
+       
         return redirect('/blog?id=' + str(new_post.id))
     else:
         return render_template('/newpost.html',empty_title_error=empty_title_error,empty_body_error=empty_body_error)
