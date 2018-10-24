@@ -54,24 +54,24 @@ def index():
 def login():
     """form handler for login form: if username and password valid, logs user in; otherwise, displays appropriate errors"""
 
-    # processes form data; queries database for existing user
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
 
-        # if username in database and password matches entered password, log user in
+        
         if user and user.password == password:
             session['username'] = username
             flash("Successfully logged in!", 'logged_in')
             print(session)
             return redirect('/newpost')
-        # if username in database but password invalid:
+    
         elif user and not user.password == password:
             flash('Invalid password', 'invalid_password')
             print(session)
             return redirect('/login')
-        # if username not in database:
+        
         else:
             flash('Invalid username', 'invalid_username')
             return redirect('/login')
@@ -93,10 +93,8 @@ def signup():
 
         existing_user = User.query.filter_by(username=username).first()
 
-        # Form Validation
-        # if either username, password, or verify are blank, display error message that affected fields are invalid
-        # if either len(username) < 3 or len(password) <3, display 'invalid username' or 'invalid password' message
-        # if password and verify don't match, display error message that passwords don't match
+        
+        
 
         if not username:
             username_error = "This field cannot be empty"
@@ -124,13 +122,13 @@ def signup():
                 password_error = "Password must be 3 or more characters"
                 password = ""
 
-        # if user is not in database and one or more validation errors are generated, re-serve form with appropriate error messages:
+        
         if not existing_user and username_error or password_error or verify_error:
             return render_template ("signup.html",
             username=username,
             username_error=username_error, password_error=password_error, verify_error=verify_error)
 
-        # if user is not in database and no validation errors are generated (i.e. all form data is valid), create new user and save in database and session variable:
+        
         elif not existing_user and not username_error and not password_error and not verify_error:
             new_user = User(username, password)
             db.session.add(new_user)
@@ -138,7 +136,7 @@ def signup():
             session['username'] = username
             return redirect('/newpost')
 
-        # if username is already in database (i.e. duplicate user):
+        
         else:
             flash('That username is already in use. Please choose another.', 'duplicate_username')
             return redirect('/signup')
@@ -155,7 +153,7 @@ def logout():
 def show_posts():
     """displays blog posts: single, single-user, and all"""
 
-    # displays single blog post
+   
     if request.method == 'GET' and request.args.get('id'):
         blog_id = request.args.get('id')
         blog = Blog.query.get(blog_id)
@@ -163,14 +161,14 @@ def show_posts():
         user = User.query.get(user_id)
         return render_template('single_blog.html', title='Blogz', user=user, blog=blog)
 
-    # displays all blog posts for an individual user
+    
     if request.method == 'GET' and request.args.get('userID'):
         user_id = request.args.get('userID')
         user = User.query.get(user_id)
         user_blogs = Blog.query.filter_by(owner_id=user_id).all()
         return render_template('single_user.html', title='Blogz', user=user, user_blogs=user_blogs)
 
-    # displays all blog posts
+    
     if request.method == 'GET' or request.method == 'POST':
         blogs = Blog.query.all()
         return render_template('all_blogs.html', title='Blogz', blogs=blogs)
@@ -179,11 +177,11 @@ def show_posts():
 def add_post():
     """form handler for new posts; if no form validation errors, redirects to blog post page"""
 
-    # displays the add a post form
+   
     if request.method == 'GET':
         return render_template('new_blog.html', title="Blogz")
 
-    # form handler for new posts
+
     if request.method == 'POST':
         blog_title = request.form['title']
         blog_body = request.form['body']
@@ -191,17 +189,17 @@ def add_post():
         error = "This field cannot be left blank."
         title_error, body_error = "", ""
 
-        # if blog title is missing, render error
+       
         if not blog_title:
             title_error = error
             return render_template('new_blog.html', title="Build A Blog!", title_error=title_error, blog_body=blog_body)
 
-        # if blog body is missing, render error
+        
         if not blog_body:
             body_error = error
             return render_template('new_blog.html', title="Build A Blog!", body_error=body_error, blog_title=blog_title)
 
-        # if no errors are generated, create new blog post
+        
         if not title_error and not body_error:
             new_blog = Blog(blog_title, blog_body, owner)
             db.session.add(new_blog)

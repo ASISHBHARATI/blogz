@@ -7,16 +7,16 @@
             <div class="form-group">
                 <label for="title">Title of your blog entry: </label>
                 <br>
-                <input type="text" name="title" id="title" value="{{ blog_title }}" placeholder="My First Blog Post"></input>
+                <input type="text" name="title" id="title" value="{{ blog_title }}" placeholder="Your Blog Post"></input>
                 {% if title_error %}
                     <p class='error'>{{ title_error }}</p>
                 {% endif %}
             </div>
             <br>
             <div class="form-group">
-                <label for="body">Text of your blog entry: </label>
+                <label for="body">Write your blog entry: </label>
                 <br>
-                <textarea name="body" id="body" placeholder="Your thrilling content goes here.">{{ blog_body }}</textarea>
+                <textarea name="body" id="body" placeholder="Your blog content goes here.">{{ blog_body }}</textarea>
                 {% if body_error %}
                     <p class='error'>{{ body_error }}</p>
                 {% endif %}
